@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="map"></div>
+    <button id="getOffer">Get Offer</button>
+
+<script>
+    document.getElementById('getOffer').addEventListener
+        ('click', getOffer);
+    function initMap () {
+            let options = {
+                zoom: 2,
+                center: {lat: -33.8688, lng: 151.2093}
+            }
+            
+            for (let i = 0; i <offer_locations.length; i++){
+                let marker = new google.maps.Marker({position: offer_locations, 
+                 map: map});
+
+
+
+
+            }
+        function getOffer() {
+            fetch('https://api.luxgroup.com/api/public-offers')
+            .then((res) => res.json())
+            .then((data) => {
+                for (let i = 0; i < data.result.length; i++) {
+                    let coords = data.result[i].lowest_price_package.property;
+                    let offer_locations = [];
+                    offer_locations.push(coords.latitude, coords.longitude);
+                    let latLng = new google.maps.LatLng(offer_locations[1], offer_locations[0]);
+                    let marker = new google.maps.Marker({
+                    position: latLng,
+                    map: map });
+                }
+        })
+
+            
+
+
+        }
+           
+   
+        // window.eqfeed_callback = function(results) {
+        // for (var i = 0; i < results.features.length; i++) {
+        //   var coords = results.features[i].geometry.coordinates;
+        //   var latLng = new google.maps.LatLng(coords[1],coords[0]);
+        //   var marker = new google.maps.Marker({
+        //     position: latLng,
+        //     map: map
+    }
+      
+</script>
+
+<script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDGNCqLHBp4qlQ4MKa2ka10_Q4MTE-2F3A&callback=initMap">
+</script>
+    
+</body>
+</html>
