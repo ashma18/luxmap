@@ -10,55 +10,35 @@
 </head>
 <body>
     <div id="map"></div>
-    <button id="getOffer">Get Offer</button>
 
 <script>
-    document.getElementById('getOffer').addEventListener
-        ('click', getOffer);
-    function initMap () {
-            let options = {
-                zoom: 2,
-                center: {lat: -33.8688, lng: 151.2093}
-            }
-            
-            for (let i = 0; i <offer_locations.length; i++){
-                let marker = new google.maps.Marker({position: offer_locations, 
-                 map: map});
+
+function initMap () {
+        let options = {
+            zoom: 2,
+            center: {lat: -33.8688, lng: 151.2093}
+        }; 
+        let map = new google.maps.Map(document.getElementById('map'), options)
+//         getOffer();
+// };
+
+// function getOffer() {
+    fetch('https://api.luxgroup.com/api/public-offers')
+    .then((res) => res.json())
+    .then((data) => {
+        for (let i = 0; i < data.result.length; i++) {
+            let coords = data.result[i].lowest_price_package.property;
+            let offer_locations = {lat: coords.latitude, lng: coords.longitude};
+            console.log(offer_locations);
+            let marker = new google.maps.Marker({
+                position: offer_locations,
+                map: map
+            })
+        };
+    })
+};
 
 
-
-
-            }
-        function getOffer() {
-            fetch('https://api.luxgroup.com/api/public-offers')
-            .then((res) => res.json())
-            .then((data) => {
-                for (let i = 0; i < data.result.length; i++) {
-                    let coords = data.result[i].lowest_price_package.property;
-                    let offer_locations = [];
-                    offer_locations.push(coords.latitude, coords.longitude);
-                    let latLng = new google.maps.LatLng(offer_locations[1], offer_locations[0]);
-                    let marker = new google.maps.Marker({
-                    position: latLng,
-                    map: map });
-                }
-        })
-
-            
-
-
-        }
-           
-   
-        // window.eqfeed_callback = function(results) {
-        // for (var i = 0; i < results.features.length; i++) {
-        //   var coords = results.features[i].geometry.coordinates;
-        //   var latLng = new google.maps.LatLng(coords[1],coords[0]);
-        //   var marker = new google.maps.Marker({
-        //     position: latLng,
-        //     map: map
-    }
-      
 </script>
 
 <script async defer
@@ -67,3 +47,4 @@
     
 </body>
 </html>
+
