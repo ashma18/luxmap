@@ -3,42 +3,49 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title></title>
+    <title>Luxury Escapes Offer Map</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans" rel="stylesheet">
 </head>
 <body>
+    <h2> Luxury Escapes Offer Map </h2>
     <div id="map"></div>
+    <div id ="offerbox"></div>
 
 <script>
 
 function initMap () {
         let options = {
-            zoom: 2,
+            zoom: 4,
             center: {lat: -33.8688, lng: 151.2093}
         }; 
         let map = new google.maps.Map(document.getElementById('map'), options)
+        
     //Loop to retreive the markers     
     fetch('https://api.luxgroup.com/api/public-offers')
     .then((res) => res.json())
     .then((data) => {
+        
         for (let i = 0; i < data.result.length; i++) {
             let coords = data.result[i].lowest_price_package.property;
             let offer_locations = {lat: coords.latitude, lng: coords.longitude};
-            let name = data.result[i].name;
+            let offer_name = data.result[i].name;
+            let offer_description = data.result[i].description;
             let marker = new google.maps.Marker({
                 position: offer_locations,
                 map: map,
                 icon: 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
             })
             let infowindow = new google.maps.InfoWindow({
-                content: name 
+                content: `<h2>${offer_name} </h2>` + `<p> ${offer_description}</p>`
             })
             marker.addListener('click', function () {
                 infowindow.open(map, marker);
             })
         };
+        
     })
     
 };
