@@ -19,23 +19,28 @@ function initMap () {
             center: {lat: -33.8688, lng: 151.2093}
         }; 
         let map = new google.maps.Map(document.getElementById('map'), options)
-//         getOffer();
-// };
-
-// function getOffer() {
+    //Loop to retreive the markers     
     fetch('https://api.luxgroup.com/api/public-offers')
     .then((res) => res.json())
     .then((data) => {
         for (let i = 0; i < data.result.length; i++) {
             let coords = data.result[i].lowest_price_package.property;
             let offer_locations = {lat: coords.latitude, lng: coords.longitude};
-            console.log(offer_locations);
+            let name = data.result[i].name;
             let marker = new google.maps.Marker({
                 position: offer_locations,
-                map: map
+                map: map,
+                icon: 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
+            })
+            let infowindow = new google.maps.InfoWindow({
+                content: name 
+            })
+            marker.addListener('click', function () {
+                infowindow.open(map, marker);
             })
         };
     })
+    
 };
 
 
